@@ -1,9 +1,7 @@
-"use client"
-
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { api } from "../utils/api.js"
-import InboxList from "./InboxList.jsx"
+import InboxList from "./InboxList.js"
 
 export default function TestForm() {
   const navigate = useNavigate()
