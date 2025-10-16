@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Theme tokens */
+:root {
+  --bg: #0b1220;
+  --fg: #e5e7eb;
+  --muted: #6b7280;
+  --brand: #2563eb;
+  --accent: #10b981;
+  --card: #0f172a;
+  --radius: 0.875rem;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
