@@ -1,5 +1,3 @@
-"use client"
-
 import { useAuth } from "./AuthProvider.jsx"
 
 export default function AuthPanel() {

@@ -1,5 +1,3 @@
-"use client"
-
 import { useEffect, useState } from "react"
 import TestForm from "../components/TestForm.jsx"
 import HistoryTable from "../components/HistoryTable.jsx"
