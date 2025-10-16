@@ -6,6 +6,10 @@ import { connectDB } from "./config/db.js"
 import testRoutes from "./routes/testRoutes.js"
 import authRoutes from "./routes/authRoutes.js"
 import monitoringRoutes from "./routes/monitoringRoutes.js"
+import trackingRoutes from "./routes/trackingRoutes.js"
+import analyticsRoutes from "./routes/analyticsRoutes.js"
+import webhookRoutes from "./routes/webhookRoutes.js"
+import authUserRoutes from "./routes/authUserRoutes.js"
 import { globalErrorHandler, healthCheck, rateLimiter } from "./middleware/errorHandler.js"
 import { createValidationMiddleware, emailSchema, checkTestSchema } from "./middleware/validation.js"
 
@@ -37,7 +41,11 @@ app.get("/api/health", healthCheck)
 // API routes with validation
 app.use("/api", testRoutes)
 app.use("/api/auth", authRoutes)
+app.use("/api/auth/user", authUserRoutes)
 app.use("/api/monitoring", monitoringRoutes)
+app.use("/api/tracking", trackingRoutes)
+app.use("/api/analytics", analyticsRoutes)
+app.use("/api/webhooks", webhookRoutes)
 
 // Global error handler (must be last)
 app.use(globalErrorHandler)
