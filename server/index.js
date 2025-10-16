@@ -10,6 +10,7 @@ import trackingRoutes from "./routes/trackingRoutes.js"
 import analyticsRoutes from "./routes/analyticsRoutes.js"
 import webhookRoutes from "./routes/webhookRoutes.js"
 import authUserRoutes from "./routes/authUserRoutes.js"
+import advancedRoutes from "./routes/advancedRoutes.js"
 import { globalErrorHandler, healthCheck, rateLimiter } from "./middleware/errorHandler.js"
 import { createValidationMiddleware, emailSchema, checkTestSchema } from "./middleware/validation.js"
 
