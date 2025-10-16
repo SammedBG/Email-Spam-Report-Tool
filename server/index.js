@@ -47,6 +47,7 @@ app.use("/api/monitoring", monitoringRoutes)
 app.use("/api/tracking", trackingRoutes)
 app.use("/api/analytics", analyticsRoutes)
 app.use("/api/webhooks", webhookRoutes)
+app.use("/api/advanced", advancedRoutes)
 
 // Global error handler (must be last)
 app.use(globalErrorHandler)
