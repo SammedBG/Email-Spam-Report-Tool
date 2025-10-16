@@ -3,11 +3,13 @@
 import { useEffect, useMemo, useState } from "react"
 import { useParams } from "react-router-dom"
 import { api } from "../utils/api.js"
+import { useAuth } from "../components/AuthProvider.jsx"
 import ProgressBar from "../components/ProgressBar.jsx"
 import ResultCard from "../components/ResultCard.jsx"
 
 export default function Report() {
   const { code } = useParams()
+  const { getTokens, isFullyAuthenticated } = useAuth()
   const [state, setState] = useState("idle") // idle | loading | success | error
   const [data, setData] = useState(null)
   const [progress, setProgress] = useState(0)
@@ -18,8 +20,10 @@ export default function Report() {
     const t1 = setTimeout(() => setProgress(55), 500)
     const t2 = setTimeout(() => setProgress(85), 1000)
 
+    // Use real API integration with OAuth tokens
+    const tokens = getTokens()
     api
-      .get(`/api/check/${encodeURIComponent(code)}`)
+      .post(`/api/check/${encodeURIComponent(code)}`, { tokens })
       .then((res) => {
         setData(res.data)
         setState("success")
@@ -32,7 +36,7 @@ export default function Report() {
         clearTimeout(t1)
         clearTimeout(t2)
       })
-  }, [code])
+  }, [code, getTokens])
 
   const shareUrl = useMemo(() => `${window.location.origin}/report/${code}`, [code])
 
@@ -65,6 +69,19 @@ export default function Report() {
           </button>
         </div>
       </div>
+
+      {!isFullyAuthenticated() && (
+        <div className="rounded-md border border-amber-900 bg-amber-950/50 p-4 text-amber-300">
+          <div className="flex items-center gap-2">
+            <span>⚠️</span>
+            <span className="text-sm font-medium">Authentication Required</span>
+          </div>
+          <p className="text-sm mt-1">
+            You need to authenticate with all mailbox providers to enable real email detection. 
+            Go back to the home page and connect your accounts.
+          </p>
+        </div>
+      )}
 
       {state === "loading" && (
         <div className="space-y-3">

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import TestForm from "../components/TestForm.jsx"
 import HistoryTable from "../components/HistoryTable.jsx"
+import AuthPanel from "../components/AuthPanel.jsx"
 
 export default function Home() {
   const [email, setEmail] = useState("")
@@ -20,6 +21,8 @@ export default function Home() {
           Generate a unique test, send emails to our test inboxes, and view your placement across providers.
         </p>
       </section>
+
+      <AuthPanel />
 
       <TestForm />
 

@@ -1,6 +1,8 @@
 import { TestResult } from "../models/TestResult.js"
 import PDFDocument from "pdfkit"
 import { MailboxAPIService } from "../services/mailboxAPIs.js"
+import { emailService } from "../services/emailService.js"
+import { retryManager } from "../middleware/errorHandler.js"
 
 const PROVIDERS = ["Gmail", "Outlook", "Yahoo", "iCloud", "Proton"]
 const TEST_INBOXES = [
@@ -59,14 +61,24 @@ export async function startTest(req, res) {
       score: 0,
     })
 
+    const instructions = {
+      sendTo: TEST_INBOXES,
+      subject: `Deliverability Test - ${doc.code}`,
+      body: `Please send your test email with this code in subject and body: ${doc.code}.
+After sending, click "Check Results" to view placement across inboxes.`,
+    }
+
+    // Send test started notification email
+    try {
+      await emailService.sendTestStartedNotification(doc.userEmail, doc.code, instructions)
+    } catch (emailError) {
+      console.warn("Failed to send test started notification:", emailError.message)
+      // Don't fail the request if email fails
+    }
+
     res.json({
       code: doc.code,
-      instructions: {
-        sendTo: TEST_INBOXES,
-        subject: `Deliverability Test - ${doc.code}`,
-        body: `Please send your test email with this code in subject and body: ${doc.code}.
-After sending, click "Check Results" to view placement across inboxes.`,
-      },
+      instructions,
     })
   } catch (err) {
     console.error("[startTest] error", err)
@@ -85,9 +97,11 @@ export async function checkTest(req, res) {
     test.status = "processing"
     await test.save()
 
-    // Use real API integration instead of simulation
-    const mailboxService = new MailboxAPIService()
-    const apiResults = await mailboxService.checkAllInboxes(code, tokens)
+    // Use retry mechanism for API calls
+    const apiResults = await retryManager.executeWithRetry(async () => {
+      const mailboxService = new MailboxAPIService()
+      return await mailboxService.checkAllInboxes(code, tokens)
+    }, { testCode: code, userEmail: test.userEmail })
     
     // Convert API results to our format
     const result = PROVIDERS.map(provider => {
@@ -107,6 +121,17 @@ export async function checkTest(req, res) {
     test.score = score
     await test.save()
 
+    // Send report notification email
+    try {
+      await emailService.sendReportNotification(test.userEmail, test.code, {
+        score,
+        result
+      })
+    } catch (emailError) {
+      console.warn("Failed to send report notification:", emailError.message)
+      // Don't fail the request if email fails
+    }
+
     res.json({
       code: test.code,
       status: test.status,
@@ -116,6 +141,18 @@ export async function checkTest(req, res) {
     })
   } catch (err) {
     console.error("[checkTest] error", err)
+    
+    // Update test status to error
+    try {
+      const test = await TestResult.findOne({ code: req.params.code })
+      if (test) {
+        test.status = "error"
+        await test.save()
+      }
+    } catch (updateError) {
+      console.error("Failed to update test status to error:", updateError)
+    }
+    
     res.status(500).json({ error: "Server error" })
   }
 }

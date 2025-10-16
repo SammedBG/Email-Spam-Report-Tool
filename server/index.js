@@ -5,21 +5,42 @@ import dotenv from "dotenv"
 import { connectDB } from "./config/db.js"
 import testRoutes from "./routes/testRoutes.js"
 import authRoutes from "./routes/authRoutes.js"
+import monitoringRoutes from "./routes/monitoringRoutes.js"
+import { globalErrorHandler, healthCheck, rateLimiter } from "./middleware/errorHandler.js"
+import { createValidationMiddleware, emailSchema, checkTestSchema } from "./middleware/validation.js"
 
 dotenv.config()
 
 const app = express()
 
 app.use(cors({ origin: process.env.CLIENT_ORIGIN || "*", credentials: false }))
-app.use(express.json())
+app.use(express.json({ limit: '10mb' }))
+app.use(express.urlencoded({ extended: true, limit: '10mb' }))
 app.use(morgan("dev"))
 
-app.get("/api/health", (req, res) => {
-  res.json({ ok: true, service: "email-spam-report", time: new Date().toISOString() })
+// Rate limiting middleware
+app.use((req, res, next) => {
+  const identifier = req.ip || req.connection.remoteAddress
+  if (!rateLimiter.isAllowed(identifier, 100, 60000)) { // 100 requests per minute
+    return res.status(429).json({
+      error: 'Rate Limit Exceeded',
+      message: 'Too many requests. Please try again later.',
+      retryAfter: 60
+    })
+  }
+  next()
 })
 
+// Health check endpoint
+app.get("/api/health", healthCheck)
+
+// API routes with validation
 app.use("/api", testRoutes)
 app.use("/api/auth", authRoutes)
+app.use("/api/monitoring", monitoringRoutes)
+
+// Global error handler (must be last)
+app.use(globalErrorHandler)
 
 const PORT = process.env.PORT || 5000
 
