@@ -1,5 +1,6 @@
 import sgMail from '@sendgrid/mail';
 import nodemailer from 'nodemailer';
+import { trackingService } from './trackingService.js';
 
 export class EmailService {
   constructor() {
@@ -43,7 +44,11 @@ export class EmailService {
       const reportUrl = `${process.env.CLIENT_ORIGIN}/report/${testCode}`;
       const subject = `Your Email Deliverability Report is Ready - ${testCode}`;
       
-      const htmlContent = this.generateReportEmailHTML(userEmail, testCode, reportData, reportUrl);
+      // Generate tracking pixel and URL
+      const { trackingId: pixelId } = trackingService.generateTrackingPixel(testCode, userEmail);
+      const { trackingUrl: trackedReportUrl } = trackingService.generateTrackingUrl(testCode, userEmail, reportUrl);
+      
+      const htmlContent = this.generateReportEmailHTML(userEmail, testCode, reportData, trackedReportUrl, pixelId);
       const textContent = this.generateReportEmailText(userEmail, testCode, reportData, reportUrl);
 
       const emailData = {
@@ -99,7 +104,7 @@ export class EmailService {
   }
 
   // Generate HTML email template for report
-  generateReportEmailHTML(userEmail, testCode, reportData, reportUrl) {
+  generateReportEmailHTML(userEmail, testCode, reportData, reportUrl, pixelId) {
     const scoreColor = reportData.score >= 80 ? '#10b981' : reportData.score >= 60 ? '#f59e0b' : '#ef4444';
     
     return `
@@ -153,6 +158,9 @@ export class EmailService {
             </div>
           </div>
         </div>
+        
+        <!-- Tracking Pixel -->
+        <img src="${process.env.CLIENT_ORIGIN}/api/tracking/pixel/${pixelId}" width="1" height="1" style="display:none;" alt="" />
       </body>
       </html>
     `;
