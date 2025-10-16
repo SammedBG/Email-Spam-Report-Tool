@@ -1,4 +1,4 @@
-import { useAuth } from "./AuthProvider.jsx"
+import { useAuth } from "./AuthProvider.js"
 
 export default function AuthPanel() {
   const { authStatus, loading, authenticate, getAuthProgress, isFullyAuthenticated } = useAuth()

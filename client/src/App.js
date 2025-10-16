@@ -1,25 +1,41 @@
-import logo from './logo.svg';
-import './App.css';
+import { Routes, Route, NavLink } from "react-router-dom"
+import { AuthProvider } from "./components/AuthProvider.js"
+import Home from "./pages/Home.js"
+import Report from "./pages/Report.js"
 
-function App() {
+export default function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+    <AuthProvider>
+      <div className="min-h-full flex flex-col">
+        <header className="border-b border-slate-800 bg-slate-900/60 backdrop-blur">
+          <div className="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between">
+            <NavLink to="/" className="text-lg font-semibold text-white">
+              Email Spam Report
+            </NavLink>
+            <nav className="flex items-center gap-4 text-sm">
+              <NavLink
+                to="/"
+                className={({ isActive }) => `hover:text-white ${isActive ? "text-white" : "text-slate-300"}`}
+              >
+                Home
+              </NavLink>
+            </nav>
+          </div>
+        </header>
 
-export default App;
+        <main className="flex-1">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/report/:code" element={<Report />} />
+          </Routes>
+        </main>
+
+        <footer className="border-t border-slate-800">
+          <div className="mx-auto max-w-6xl px-4 py-6 text-xs text-slate-400">
+            Built with React + Express + MongoDB. Real API integrations for Gmail, Outlook, Yahoo, iCloud, and ProtonMail.
+          </div>
+        </footer>
+      </div>
+    </AuthProvider>
+  )
+}
