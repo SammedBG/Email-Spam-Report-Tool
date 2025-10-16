@@ -14,7 +14,11 @@
     "express": "^4.19.2",
     "mongoose": "^8.6.0",
     "morgan": "^1.10.0",
-    "pdfkit": "^0.15.0"
+    "pdfkit": "^0.15.0",
+    "googleapis": "^144.0.0",
+    "@microsoft/microsoft-graph-client": "^3.0.7",
+    "axios": "^1.7.7",
+    "jsonwebtoken": "^9.0.2"
   },
   "devDependencies": {
     "nodemon": "^3.1.4"

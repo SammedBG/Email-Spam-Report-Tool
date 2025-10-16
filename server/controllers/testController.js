@@ -1,5 +1,6 @@
 import { TestResult } from "../models/TestResult.js"
 import PDFDocument from "pdfkit"
+import { MailboxAPIService } from "../services/mailboxAPIs.js"
 
 const PROVIDERS = ["Gmail", "Outlook", "Yahoo", "iCloud", "Proton"]
 const TEST_INBOXES = [
@@ -76,17 +77,29 @@ After sending, click "Check Results" to view placement across inboxes.`,
 export async function checkTest(req, res) {
   try {
     const { code } = req.params
+    const { tokens } = req.body || {} // OAuth tokens from frontend
+    
     const test = await TestResult.findOne({ code })
     if (!test) return res.status(404).json({ error: "Test not found" })
 
-    // Simulated detection (replace with Gmail/Outlook API integrations if available)
     test.status = "processing"
     await test.save()
 
-    const result = PROVIDERS.map((p) => ({
-      provider: p,
-      placement: simulatePlacement(p, code),
-    }))
+    // Use real API integration instead of simulation
+    const mailboxService = new MailboxAPIService()
+    const apiResults = await mailboxService.checkAllInboxes(code, tokens)
+    
+    // Convert API results to our format
+    const result = PROVIDERS.map(provider => {
+      const apiResult = apiResults[provider]
+      return {
+        provider,
+        placement: apiResult.found ? apiResult.placement : 'Not Found',
+        found: apiResult.found,
+        error: apiResult.error
+      }
+    })
+    
     const score = computeScore(result)
 
     test.status = "completed"
@@ -156,7 +169,7 @@ export async function getReportPdf(req, res) {
     doc
       .fontSize(10)
       .fillColor("#666")
-      .text("Notes: This is a simulated report for demo purposes. Integrate Gmail/Outlook APIs for live detection.", {
+      .text("Notes: This report uses real mailbox API integrations to detect actual email placement across providers.", {
         align: "left",
       })
 
