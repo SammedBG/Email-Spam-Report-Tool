@@ -5,7 +5,7 @@ import InboxList from "./InboxList.js"
 
 export default function TestForm() {
   const [email, setEmail] = useState("")
-  const [selectedInboxes, setSelectedInboxes] = useState(["gmail", "outlook", "yahoo", "icloud", "proton"])
+  const [selectedInboxes, setSelectedInboxes] = useState(["gmail", "outlook", "yahoo"])
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
 

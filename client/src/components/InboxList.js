@@ -4,15 +4,13 @@ export default function InboxList({ selectedInboxes, onToggle }) {
   const inboxes = [
     { id: "gmail", name: "Gmail", icon: "📧", color: "from-red-500 to-red-600" },
     { id: "outlook", name: "Outlook", icon: "📮", color: "from-blue-500 to-blue-600" },
-    { id: "yahoo", name: "Yahoo", icon: "📬", color: "from-purple-500 to-purple-600" },
-    { id: "icloud", name: "iCloud", icon: "☁️", color: "from-gray-500 to-gray-600" },
-    { id: "proton", name: "ProtonMail", icon: "🔒", color: "from-yellow-500 to-yellow-600" }
+    { id: "yahoo", name: "Yahoo", icon: "📬", color: "from-purple-500 to-purple-600" }
   ]
 
   return (
     <div className="space-y-4">
       <div className="text-sm font-semibold text-white">Select Providers to Test</div>
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         {inboxes.map((inbox) => (
           <label
             key={inbox.id}

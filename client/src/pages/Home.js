@@ -25,7 +25,7 @@ export default function Home() {
               </span>
             </h1>
             <p className="text-xl text-slate-300 mb-8 leading-relaxed">
-              Test your email deliverability across Gmail, Outlook, Yahoo, iCloud, and ProtonMail. 
+              Test your email deliverability across Gmail, Outlook, and Yahoo. 
               Get instant insights and improve your email performance.
             </p>
             <div className="flex flex-wrap justify-center gap-4 text-sm text-slate-400">
@@ -35,7 +35,7 @@ export default function Home() {
               </div>
               <div className="flex items-center space-x-2">
                 <span className="w-2 h-2 bg-blue-400 rounded-full"></span>
-                <span>5 Major Providers</span>
+                <span>3 Major Providers</span>
               </div>
               <div className="flex items-center space-x-2">
                 <span className="w-2 h-2 bg-purple-400 rounded-full"></span>

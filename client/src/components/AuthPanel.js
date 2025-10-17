@@ -7,9 +7,7 @@ export default function AuthPanel() {
   const providers = [
     { key: 'gmail', name: 'Gmail', color: 'from-red-500 to-red-600', icon: '📧' },
     { key: 'outlook', name: 'Outlook', color: 'from-blue-500 to-blue-600', icon: '📧' },
-    { key: 'yahoo', name: 'Yahoo', color: 'from-purple-500 to-purple-600', icon: '📧' },
-    { key: 'icloud', name: 'iCloud', color: 'from-gray-500 to-gray-600', icon: '☁️' },
-    { key: 'proton', name: 'ProtonMail', color: 'from-yellow-500 to-yellow-600', icon: '🔒' }
+    { key: 'yahoo', name: 'Yahoo', color: 'from-purple-500 to-purple-600', icon: '📧' }
   ]
 
   return (
@@ -45,7 +43,7 @@ export default function AuthPanel() {
       </div>
 
       {/* Provider Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         {providers.map((provider) => {
           const isAuthenticated = authStatus[provider.key]?.authenticated
           return (
