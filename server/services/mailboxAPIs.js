@@ -1,6 +1,5 @@
 import { google } from 'googleapis';
 import { Client } from '@microsoft/microsoft-graph-client';
-import { AuthenticationProvider } from '@microsoft/microsoft-graph-client';
 import axios from 'axios';
 
 // Gmail API Integration
