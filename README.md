@@ -66,8 +66,6 @@ server/
 - **Gmail API** - Google Cloud Console integration
 - **Microsoft Graph API** - Azure Portal integration
 - **Yahoo Mail API** - Yahoo Developer Network
-- **iCloud Mail API** - Apple Developer Portal
-- **ProtonMail API** - ProtonMail Developer
 
 ### **2. Email Notification System**
 - **Test Started Emails** - Beautiful HTML templates
@@ -103,8 +101,6 @@ GET  /api/report/:code/pdf        # Download PDF report
 GET  /api/auth/gmail              # Gmail OAuth
 GET  /api/auth/outlook            # Outlook OAuth
 GET  /api/auth/yahoo              # Yahoo OAuth
-GET  /api/auth/icloud             # iCloud OAuth
-GET  /api/auth/proton             # ProtonMail OAuth
 ```
 
 ### **Monitoring**

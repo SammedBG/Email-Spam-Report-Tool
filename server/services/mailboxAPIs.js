@@ -161,106 +161,7 @@ export class YahooService {
   }
 }
 
-// iCloud Mail API Integration
-export class iCloudService {
-  constructor() {
-    this.baseURL = 'https://api.icloud.com';
-  }
-
-  async authenticate() {
-    // iCloud uses different authentication flow
-    const authUrl = `https://idmsa.apple.com/appleauth/auth/signin?` +
-      `client_id=${process.env.ICLOUD_CLIENT_ID}&` +
-      `redirect_uri=${process.env.ICLOUD_REDIRECT_URI}&` +
-      `response_type=code&` +
-      `scope=mail`;
-    return authUrl;
-  }
-
-  async searchEmails(testCode, accessToken) {
-    try {
-      const response = await axios.get(`${this.baseURL}/mail/messages`, {
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-          'Content-Type': 'application/json'
-        },
-        params: {
-          search: testCode
-        }
-      });
-
-      if (!response.data.messages || response.data.messages.length === 0) {
-        return { found: false, placement: 'Not Found' };
-      }
-
-      const message = response.data.messages[0];
-      
-      // Determine placement based on folder
-      if (message.folder === 'Inbox') {
-        return { found: true, placement: 'Inbox' };
-      } else if (message.folder === 'Junk') {
-        return { found: true, placement: 'Spam' };
-      } else if (message.folder === 'Promotions') {
-        return { found: true, placement: 'Promotions' };
-      } else {
-        return { found: true, placement: 'Other' };
-      }
-    } catch (error) {
-      console.error('iCloud API error:', error);
-      return { found: false, placement: 'Error', error: error.message };
-    }
-  }
-}
-
-// ProtonMail API Integration
-export class ProtonService {
-  constructor() {
-    this.baseURL = 'https://api.protonmail.ch';
-  }
-
-  async authenticate() {
-    const authUrl = `https://account.proton.me/oauth/authorize?` +
-      `client_id=${process.env.PROTON_CLIENT_ID}&` +
-      `redirect_uri=${process.env.PROTON_REDIRECT_URI}&` +
-      `response_type=code&` +
-      `scope=mail:read`;
-    return authUrl;
-  }
-
-  async searchEmails(testCode, accessToken) {
-    try {
-      const response = await axios.get(`${this.baseURL}/mail/v4/messages`, {
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-          'Content-Type': 'application/json'
-        },
-        params: {
-          query: testCode
-        }
-      });
-
-      if (!response.data.messages || response.data.messages.length === 0) {
-        return { found: false, placement: 'Not Found' };
-      }
-
-      const message = response.data.messages[0];
-      
-      // Determine placement based on folder
-      if (message.folder === 'Inbox') {
-        return { found: true, placement: 'Inbox' };
-      } else if (message.folder === 'Spam') {
-        return { found: true, placement: 'Spam' };
-      } else if (message.folder === 'Promotions') {
-        return { found: true, placement: 'Promotions' };
-      } else {
-        return { found: true, placement: 'Other' };
-      }
-    } catch (error) {
-      console.error('ProtonMail API error:', error);
-      return { found: false, placement: 'Error', error: error.message };
-    }
-  }
-}
+// iCloud and ProtonMail services removed
 
 // Custom Authentication Provider for Microsoft Graph
 class OutlookAuthProvider {
@@ -282,25 +183,19 @@ export class MailboxAPIService {
     this.gmail = new GmailService();
     this.outlook = new OutlookService();
     this.yahoo = new YahooService();
-    this.icloud = new iCloudService();
-    this.proton = new ProtonService();
   }
 
   async checkAllInboxes(testCode, tokens = {}) {
     const results = await Promise.allSettled([
       this.checkGmail(testCode, tokens.gmail),
       this.checkOutlook(testCode, tokens.outlook),
-      this.checkYahoo(testCode, tokens.yahoo),
-      this.checkiCloud(testCode, tokens.icloud),
-      this.checkProton(testCode, tokens.proton)
+      this.checkYahoo(testCode, tokens.yahoo)
     ]);
 
     return {
       Gmail: results[0].status === 'fulfilled' ? results[0].value : { found: false, placement: 'Error' },
       Outlook: results[1].status === 'fulfilled' ? results[1].value : { found: false, placement: 'Error' },
-      Yahoo: results[2].status === 'fulfilled' ? results[2].value : { found: false, placement: 'Error' },
-      iCloud: results[3].status === 'fulfilled' ? results[3].value : { found: false, placement: 'Error' },
-      Proton: results[4].status === 'fulfilled' ? results[4].value : { found: false, placement: 'Error' }
+      Yahoo: results[2].status === 'fulfilled' ? results[2].value : { found: false, placement: 'Error' }
     };
   }
 
@@ -324,11 +219,4 @@ export class MailboxAPIService {
     return await this.yahoo.searchEmails(testCode, tokens?.access_token);
   }
 
-  async checkiCloud(testCode, tokens) {
-    return await this.icloud.searchEmails(testCode, tokens?.access_token);
-  }
-
-  async checkProton(testCode, tokens) {
-    return await this.proton.searchEmails(testCode, tokens?.access_token);
-  }
 }
