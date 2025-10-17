@@ -2,32 +2,44 @@ import { useState } from "react"
 
 export default function InboxList({ selectedInboxes, onToggle }) {
   const inboxes = [
-    { id: "gmail", name: "Gmail", icon: "📧" },
-    { id: "outlook", name: "Outlook", icon: "📮" },
-    { id: "yahoo", name: "Yahoo", icon: "📬" },
-    { id: "icloud", name: "iCloud", icon: "☁️" },
-    { id: "proton", name: "ProtonMail", icon: "🔒" }
+    { id: "gmail", name: "Gmail", icon: "📧", color: "from-red-500 to-red-600" },
+    { id: "outlook", name: "Outlook", icon: "📮", color: "from-blue-500 to-blue-600" },
+    { id: "yahoo", name: "Yahoo", icon: "📬", color: "from-purple-500 to-purple-600" },
+    { id: "icloud", name: "iCloud", icon: "☁️", color: "from-gray-500 to-gray-600" },
+    { id: "proton", name: "ProtonMail", icon: "🔒", color: "from-yellow-500 to-yellow-600" }
   ]
 
   return (
-    <div className="space-y-3">
-      <div className="text-sm font-medium text-slate-300">Select Inboxes to Test</div>
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+    <div className="space-y-4">
+      <div className="text-sm font-semibold text-white">Select Providers to Test</div>
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
         {inboxes.map((inbox) => (
           <label
             key={inbox.id}
-            className="flex items-center gap-2 p-3 rounded-md border border-slate-700 hover:border-slate-600 cursor-pointer transition-colors"
+            className={`relative flex flex-col items-center p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 ${
+              selectedInboxes.includes(inbox.id)
+                ? 'border-blue-500 bg-blue-500/10'
+                : 'border-white/20 bg-white/5 hover:bg-white/10 hover:border-white/30'
+            }`}
           >
             <input
               type="checkbox"
               checked={selectedInboxes.includes(inbox.id)}
               onChange={() => onToggle(inbox.id)}
-              className="rounded border-slate-600 bg-slate-800 text-blue-600 focus:ring-blue-500"
+              className="sr-only"
             />
-            <span className="text-lg">{inbox.icon}</span>
-            <span className="text-sm text-slate-300">{inbox.name}</span>
+            <div className="text-3xl mb-2">{inbox.icon}</div>
+            <div className="text-sm font-medium text-white text-center">{inbox.name}</div>
+            {selectedInboxes.includes(inbox.id) && (
+              <div className="absolute top-2 right-2 w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center">
+                <span className="text-white text-xs">✓</span>
+              </div>
+            )}
           </label>
         ))}
+      </div>
+      <div className="text-xs text-slate-400 text-center">
+        {selectedInboxes.length} of {inboxes.length} providers selected
       </div>
     </div>
   )

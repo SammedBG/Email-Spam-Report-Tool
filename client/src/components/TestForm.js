@@ -42,11 +42,16 @@ export default function TestForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="space-y-4">
-        <div>
-          <label htmlFor="email" className="block text-sm font-medium text-slate-300 mb-2">
-            Your Email Address
+    <div className="space-y-8">
+      <div className="text-center">
+        <h2 className="text-2xl font-bold text-white mb-2">Start Your Test</h2>
+        <p className="text-slate-400">Enter your email and select providers to test</p>
+      </div>
+
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="space-y-2">
+          <label htmlFor="email" className="block text-sm font-semibold text-white">
+            Email Address
           </label>
           <input
             id="email"
@@ -54,7 +59,7 @@ export default function TestForm() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="your@email.com"
-            className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-md text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
             required
           />
         </div>
@@ -63,15 +68,25 @@ export default function TestForm() {
           selectedInboxes={selectedInboxes} 
           onToggle={toggleInbox} 
         />
-      </div>
 
-      <button
-        type="submit"
-        disabled={loading || selectedInboxes.length === 0}
-        className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-slate-600 disabled:cursor-not-allowed text-white font-medium py-3 px-4 rounded-md transition-colors"
-      >
-        {loading ? "Starting Test..." : "Start Deliverability Test"}
-      </button>
-    </form>
+        <button
+          type="submit"
+          disabled={loading || selectedInboxes.length === 0}
+          className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 disabled:from-slate-600 disabled:to-slate-600 disabled:cursor-not-allowed text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl disabled:shadow-none"
+        >
+          {loading ? (
+            <div className="flex items-center justify-center space-x-2">
+              <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+              <span>Starting Test...</span>
+            </div>
+          ) : (
+            <div className="flex items-center justify-center space-x-2">
+              <span>🚀</span>
+              <span>Start Deliverability Test</span>
+            </div>
+          )}
+        </button>
+      </form>
+    </div>
   )
 }
