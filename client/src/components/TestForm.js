@@ -2,11 +2,14 @@ import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { api } from "../utils/api.js"
 import InboxList from "./InboxList.js"
+import TestInstructions from "./TestInstructions.js"
 
 export default function TestForm() {
   const [email, setEmail] = useState("")
   const [selectedInboxes, setSelectedInboxes] = useState(["gmail", "outlook", "yahoo"])
   const [loading, setLoading] = useState(false)
+  const [showInstructions, setShowInstructions] = useState(false)
+  const [testData, setTestData] = useState(null)
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -25,12 +28,18 @@ export default function TestForm() {
         email,
         inboxes: selectedInboxes
       })
-      navigate(`/report/${res.data.code}`)
+      setTestData(res.data)
+      setShowInstructions(true)
     } catch (error) {
       console.error("Failed to start test:", error)
     } finally {
       setLoading(false)
     }
+  }
+
+  const handleStartTesting = () => {
+    setShowInstructions(false)
+    navigate(`/report/${testData.code}`)
   }
 
   const toggleInbox = (inboxId) => {
@@ -87,6 +96,14 @@ export default function TestForm() {
           )}
         </button>
       </form>
+
+      {showInstructions && testData && (
+        <TestInstructions
+          testCode={testData.code}
+          testInboxes={testData.instructions.sendTo}
+          onClose={handleStartTesting}
+        />
+      )}
     </div>
   )
 }

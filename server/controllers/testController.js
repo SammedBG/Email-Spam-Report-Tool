@@ -6,13 +6,11 @@ import { retryManager } from "../middleware/errorHandler.js"
 import { trackingService } from "../services/trackingService.js"
 import { webhookService } from "../services/webhookService.js"
 
-const PROVIDERS = ["Gmail", "Outlook", "Yahoo", "iCloud", "Proton"]
+const PROVIDERS = ["Gmail", "Outlook", "Yahoo"]
 const TEST_INBOXES = [
   { provider: "Gmail", address: "deliverability.test+gmail@example.com" },
   { provider: "Outlook", address: "deliverability.test+outlook@example.com" },
   { provider: "Yahoo", address: "deliverability.test+yahoo@example.com" },
-  { provider: "iCloud", address: "deliverability.test+icloud@example.com" },
-  { provider: "Proton", address: "deliverability.test+proton@example.com" },
 ]
 
 // Simple code generator (8-char base36)
