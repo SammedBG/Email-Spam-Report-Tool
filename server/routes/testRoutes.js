@@ -20,6 +20,15 @@ router.post("/check/:code",
 // Get history by email
 router.get("/history/:email", asyncHandler(getHistoryByEmail))
 
+// Get all history (for general history display)
+router.get("/history", asyncHandler(async (req, res) => {
+  const { TestResult } = await import("../models/TestResult.js")
+  const tests = await TestResult.find({})
+    .sort({ createdAt: -1 })
+    .limit(50)
+  res.json(tests)
+}))
+
 // Get PDF report
 router.get("/report/:code/pdf", asyncHandler(getReportPdf))
 

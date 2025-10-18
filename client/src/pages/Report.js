@@ -57,6 +57,12 @@ export default function Report() {
         </div>
         <div className="flex items-center gap-2">
           <button
+            onClick={() => window.location.reload()}
+            className="rounded-md bg-green-600 hover:bg-green-700 px-3 py-2 text-sm font-medium text-white"
+          >
+            🔄 Check Results
+          </button>
+          <button
             onClick={() => navigator.clipboard.writeText(shareUrl)}
             className="rounded-md border border-slate-700 px-3 py-2 text-sm"
           >
@@ -82,9 +88,14 @@ export default function Report() {
       )}
 
       {state === "loading" && (
-        <div className="space-y-3">
-          <div className="text-slate-300">Checking inbox placements…</div>
-          <ProgressBar value={progress} />
+        <div className="space-y-6">
+          <div className="bg-blue-950/30 border border-blue-800 rounded-lg p-6">
+            <div className="text-center">
+              <div className="text-blue-300 text-lg font-semibold mb-2">Checking Inbox Placements</div>
+              <div className="text-slate-300 mb-4">Scanning Gmail, Outlook, and Yahoo inboxes for your test email...</div>
+              <ProgressBar value={progress} />
+            </div>
+          </div>
         </div>
       )}
 
@@ -97,18 +108,26 @@ export default function Report() {
       {state === "success" && data && (
         <div className="space-y-8">
           <div className="rounded-[var(--radius)] border border-slate-800 p-6 bg-slate-900/60">
-            <div className="text-sm text-slate-300 mb-2">Overall Deliverability</div>
+            <div className="text-sm text-slate-300 mb-2">Overall Deliverability Score</div>
             <div className="text-3xl font-bold">{data.score}%</div>
-            <div className="text-xs text-slate-400">Based on placement across 5 inbox providers.</div>
+            <div className="text-xs text-slate-400">Based on placement across 3 major email providers</div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {data.result.map((r) => (
               <ResultCard key={r.provider} provider={r.provider} placement={r.placement} />
             ))}
           </div>
 
-          <div className="text-xs text-slate-500">Created: {new Date(data.createdAt).toLocaleString()}</div>
+          <div className="bg-slate-800 border border-slate-600 rounded-lg p-4">
+            <div className="text-sm text-slate-300 mb-2">Test Information</div>
+            <div className="text-xs text-slate-400">
+              Test Code: <span className="font-mono text-white">{data.code}</span>
+            </div>
+            <div className="text-xs text-slate-400">
+              Created: {new Date(data.createdAt).toLocaleString()}
+            </div>
+          </div>
         </div>
       )}
     </div>

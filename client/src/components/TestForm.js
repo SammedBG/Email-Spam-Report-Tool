@@ -101,6 +101,7 @@ export default function TestForm() {
         <TestInstructions
           testCode={testData.code}
           testInboxes={testData.instructions.sendTo}
+          stepByStep={testData.instructions.stepByStep}
           onClose={handleStartTesting}
         />
       )}
