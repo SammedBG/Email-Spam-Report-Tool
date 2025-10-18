@@ -1,6 +1,6 @@
 import { useState } from "react"
 
-export default function TestInstructions({ testCode, testInboxes, onClose }) {
+export default function TestInstructions({ testCode, testInboxes, stepByStep, onClose }) {
   const [copiedCode, setCopiedCode] = useState(false)
   const [copiedAddresses, setCopiedAddresses] = useState(false)
 
@@ -90,10 +90,16 @@ export default function TestInstructions({ testCode, testInboxes, onClose }) {
           <div className="bg-amber-950/30 border border-amber-800 rounded-lg p-4">
             <h4 className="font-semibold text-amber-300 mb-3">How to Test</h4>
             <ol className="text-sm text-slate-300 space-y-2 list-decimal list-inside">
-              <li>Send an email from your own email account to all the addresses above</li>
-              <li>Include the test code <code className="bg-slate-700 px-1 rounded">{testCode}</code> in both the subject and body</li>
-              <li>Wait 2-3 minutes for delivery</li>
-              <li>Click "Check Results" to see where your email landed</li>
+              {stepByStep ? stepByStep.map((step, index) => (
+                <li key={index}>{step}</li>
+              )) : (
+                <>
+                  <li>Send an email from your own email account to all the addresses above</li>
+                  <li>Include the test code <code className="bg-slate-700 px-1 rounded">{testCode}</code> in both the subject and body</li>
+                  <li>Wait 2-3 minutes for delivery</li>
+                  <li>Click "Check Results" to see where your email landed</li>
+                </>
+              )}
             </ol>
           </div>
 

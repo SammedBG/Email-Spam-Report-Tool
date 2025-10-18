@@ -66,6 +66,13 @@ export async function startTest(req, res) {
       subject: `Deliverability Test - ${doc.code}`,
       body: `Please send your test email with this code in subject and body: ${doc.code}.
 After sending, click "Check Results" to view placement across inboxes.`,
+      testCode: doc.code,
+      stepByStep: [
+        "Send an email from your own email account to all the addresses above",
+        `Include the test code "${doc.code}" in both the subject line and email body`,
+        "Wait 2-3 minutes for the email to be delivered",
+        "Click 'Check Results' to see where your email landed in each inbox"
+      ]
     }
 
     // Send test started notification email
