@@ -1,4 +1,4 @@
-# 📧 Email Spam Report Tool
+# Email Spam Report Tool
 
 A professional email deliverability testing application that helps users test where their emails land across major email providers (Gmail, Outlook, Yahoo). Built with modern web technologies and real API integrations.
 
